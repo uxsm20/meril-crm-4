@@ -10,28 +10,65 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CustomBadge } from "@/components/ui/custom-badge";
 import { Search, Plus, Building2, MapPin, Users as UsersIcon } from "lucide-react";
 import { COMPANIES } from "@/lib/constants";
 import { ProposalBuilder } from "./ProposalBuilder";
 import { CompanyDetails } from "@/components/companies/CompanyDetails";
+import { AddEditCompanyDialog } from "@/components/companies/AddEditCompanyDialog";
 
 export function Companies() {
   const [showBuilder, setShowBuilder] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAddEdit, setShowAddEdit] = useState(false);
+  const [editingCompany, setEditingCompany] = useState<any>(null);
+  const [companies, setCompanies] = useState(COMPANIES);
 
-  const filteredCompanies = COMPANIES.filter(
+  const handleAddEditCompany = (companyData: any) => {
+    if (companyData.id) {
+      // Editing existing company
+      setCompanies(companies.map(c => 
+        c.id === companyData.id ? companyData : c
+      ));
+    } else {
+      // Adding new company
+      const newCompany = {
+        ...companyData,
+        id: (companies.length + 1).toString(),
+        recentDeals: []
+      };
+      setCompanies([...companies, newCompany]);
+    }
+    setShowAddEdit(false);
+    setEditingCompany(null);
+  };
+
+  const handleEdit = (company: any) => {
+    setEditingCompany(company);
+    setShowAddEdit(true);
+  };
+
+  const filteredCompanies = companies.filter(
     company =>
       company.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       company.location.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (showBuilder) {
-    return <ProposalBuilder preselectedCompany={selectedCompany} />;
+    return (
+      <ProposalBuilder 
+        preselectedCompany={selectedCompany}
+        onBack={() => {
+          setShowBuilder(false);
+          setSelectedCompany(null);
+        }}
+      />
+    );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Companies</h2>
@@ -39,7 +76,7 @@ export function Companies() {
             Manage your hospital and healthcare facility accounts
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2" onClick={() => setShowAddEdit(true)}>
           <Plus className="h-4 w-4" />
           Add Company
         </Button>
@@ -70,7 +107,7 @@ export function Companies() {
           </TableHeader>
           <TableBody>
             {filteredCompanies.map((company) => (
-              <TableRow key={company.id} className="cursor-pointer" onClick={() => setSelectedCompany(company)}>
+              <TableRow key={company.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Building2 className="h-4 w-4 text-muted-foreground" />
@@ -86,9 +123,9 @@ export function Companies() {
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {company.departments.map((dept) => (
-                      <Badge key={dept} variant="secondary" className="text-xs">
+                      <CustomBadge key={dept} variant="department">
                         {dept}
-                      </Badge>
+                      </CustomBadge>
                     ))}
                   </div>
                 </TableCell>
@@ -100,32 +137,33 @@ export function Companies() {
                 </TableCell>
                 <TableCell>
                   {company.recentDeals.length > 0 ? (
-                    <div className="space-y-1">
-                      {company.recentDeals.map((deal) => (
-                        <div key={deal.id} className="text-sm">
-                          <p className="font-medium">₹{(deal.amount / 100000).toFixed(2)}L</p>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(deal.date).toLocaleDateString()}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
+                    <CustomBadge variant="count">
+                      {company.recentDeals.length} deals
+                    </CustomBadge>
                   ) : (
-                    <span className="text-sm text-muted-foreground">No recent deals</span>
+                    <span className="text-sm text-muted-foreground">No deals</span>
                   )}
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowBuilder(true);
-                      setSelectedCompany(company);
-                    }}
-                  >
-                    Create Proposal
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleEdit(company)}
+                    >
+                      Edit
+                    </Button>
+                    <Button 
+                      variant="default" 
+                      size="sm"
+                      onClick={() => {
+                        setSelectedCompany(company);
+                        setShowBuilder(true);
+                      }}
+                    >
+                      Create Proposal
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -136,9 +174,17 @@ export function Companies() {
       <CompanyDetails
         company={selectedCompany}
         onClose={() => setSelectedCompany(null)}
-        onCreateProposal={() => {
-          setShowBuilder(true);
+        onCreateProposal={() => setShowBuilder(true)}
+      />
+
+      <AddEditCompanyDialog
+        isOpen={showAddEdit}
+        onClose={() => {
+          setShowAddEdit(false);
+          setEditingCompany(null);
         }}
+        onSave={handleAddEditCompany}
+        company={editingCompany}
       />
     </div>
   );

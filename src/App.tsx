@@ -11,7 +11,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState<'dashboard' | 'companies' | 'products' | 'contacts' | 'proposals'>('dashboard');
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-teal-900 via-background to-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <Header currentPage={currentPage} onPageChange={setCurrentPage} />
       <RightPanel />
       

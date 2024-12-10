@@ -4,99 +4,165 @@
  
 @layer base {
   :root {
-    --background: 180 20% 99%;
-    --foreground: 180 25% 10%;
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
     
     --card: 0 0% 100%;
-    --card-foreground: 180 25% 10%;
+    --card-foreground: 222 47% 11%;
  
     --popover: 0 0% 100%;
-    --popover-foreground: 180 25% 10%;
+    --popover-foreground: 222 47% 11%;
  
-    --primary: 174 100% 42%;
-    --primary-foreground: 0 0% 100%;
+    /* Option 1: Teal-Turquoise gradient */
+    --primary: 171 77% 44%;     /* Vibrant teal-turquoise */
+    --primary-foreground: 210 40% 98%;
  
-    --secondary: 199 100% 50%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 174 65% 57%;   /* Lighter turquoise */
+    --secondary-foreground: 210 40% 98%;
  
-    --muted: 180 20% 96%;
-    --muted-foreground: 180 10% 40%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
  
-    --accent: 174 100% 42%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 171 77% 44%;
+    --accent-foreground: 210 40% 98%;
  
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
  
-    --border: 180 20% 92%;
-    --input: 180 20% 92%;
-    --ring: 174 100% 42%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 171 77% 44%;
  
-    --radius: 0.75rem;
+    --radius: 0.5rem;
   }
  
   .dark {
-    --background: 180 25% 10%;
-    --foreground: 180 20% 99%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
  
-    --card: 180 25% 12%;
-    --card-foreground: 180 20% 99%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
  
-    --popover: 180 25% 12%;
-    --popover-foreground: 180 20% 99%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
  
-    --primary: 174 100% 42%;
-    --primary-foreground: 0 0% 100%;
+    /* Dark mode: Slightly different teal-turquoise */
+    --primary: 171 70% 40%;      /* Deeper teal-turquoise */
+    --primary-foreground: 210 40% 98%;
  
-    --secondary: 199 100% 50%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 174 60% 50%;    /* Muted turquoise */
+    --secondary-foreground: 210 40% 98%;
  
-    --muted: 180 25% 15%;
-    --muted-foreground: 180 10% 65%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
  
-    --accent: 174 100% 42%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 171 77% 44%;
+    --accent-foreground: 210 40% 98%;
  
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
  
-    --border: 180 25% 15%;
-    --input: 180 25% 15%;
-    --ring: 174 100% 42%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 171 77% 44%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Custom gradients for medical device categories */
-.gradient-cardio {
-  @apply bg-gradient-to-br from-red-500/10 to-pink-500/10;
+/* Badge styles with pastel colors */
+.badge-pending {
+  @apply bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-200;
 }
 
-.gradient-ortho {
-  @apply bg-gradient-to-br from-blue-500/10 to-cyan-500/10;
+.badge-approved {
+  @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200;
 }
 
-.gradient-surgery {
-  @apply bg-gradient-to-br from-teal-500/10 to-emerald-500/10;
+.badge-rejected {
+  @apply bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-200;
 }
 
-.gradient-diagnostic {
-  @apply bg-gradient-to-br from-violet-500/10 to-purple-500/10;
+.badge-warning {
+  @apply bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200;
 }
 
-/* Custom scrollbar for better UX */
+.badge-info {
+  @apply bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200;
+}
+
+.badge-draft {
+  @apply bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-200;
+}
+
+/* Card hover effects */
+.hover-card {
+  @apply transition-all duration-200 hover:shadow-md hover:border-primary/20;
+}
+
+/* Table styles */
+.table-row-hover {
+  @apply hover:bg-muted/50 transition-colors duration-200;
+}
+
+/* Button styles - keeping turquoise */
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm hover:shadow-md transition-all duration-200;
+}
+
+/* Form field focus states */
+.input-focus {
+  @apply focus:ring-2 focus:ring-primary/20 transition-all duration-200;
+}
+
+/* Status indicators to match badge colors */
+.status-dot-pending {
+  @apply bg-sky-500;
+}
+
+.status-dot-approved {
+  @apply bg-emerald-500;
+}
+
+.status-dot-rejected {
+  @apply bg-rose-500;
+}
+
+.status-dot-warning {
+  @apply bg-amber-500;
+}
+
+.status-dot {
+  @apply w-2 h-2 rounded-full inline-block mr-2;
+}
+
+.status-dot-active {
+  @apply bg-green-500;
+}
+
+.status-dot-inactive {
+  @apply bg-gray-400;
+}
+
+/* Navigation active states */
+.nav-item-active {
+  @apply bg-primary/10 text-primary;
+}
+
+/* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  @apply w-2;
 }
 
 ::-webkit-scrollbar-track {
@@ -104,26 +170,5 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary/30 rounded-full hover:bg-primary/50 transition-colors;
-}
-
-/* Glass morphism effects */
-.glass-panel {
-  @apply bg-background/60 backdrop-blur-lg border border-border/50;
-}
-
-/* Medical-themed cards */
-.medical-card {
-  @apply relative overflow-hidden rounded-lg border bg-card p-6 transition-all duration-300
-         hover:shadow-lg hover:border-primary/50;
-}
-
-.medical-card::before {
-  content: '';
-  @apply absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0
-         transition-opacity duration-300;
-}
-
-.medical-card:hover::before {
-  @apply opacity-100;
+  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/30;
 }

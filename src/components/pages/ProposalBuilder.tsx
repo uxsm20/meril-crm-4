@@ -19,17 +19,18 @@ import { AddProductDialog } from "../proposals/AddProductDialog";
 
 interface ProposalBuilderProps {
   preselectedProduct?: any;
+  preselectedCompany?: any;
   onBack?: () => void;
 }
 
-export function ProposalBuilder({ preselectedProduct, onBack }: ProposalBuilderProps) {
+export function ProposalBuilder({ preselectedProduct, preselectedCompany, onBack }: ProposalBuilderProps) {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [proposal, setProposal] = useState({
     title: "",
-    hospital: "",
-    contact: "",
+    hospital: preselectedCompany?.name || "",
+    contact: preselectedCompany?.contacts?.[0]?.name || "",
     products: preselectedProduct ? [{
       id: preselectedProduct.id,
       name: preselectedProduct.name,

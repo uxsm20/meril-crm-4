@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CustomBadge } from "@/components/ui/custom-badge";
 import { Search, Plus, Package, IndianRupee } from "lucide-react";
 import { AddProductDialog } from "../products/AddProductDialog";
 import { ProposalBuilder } from "./ProposalBuilder";
@@ -173,9 +174,9 @@ export function Products() {
               <div className="mt-4 space-y-4">
                 <div className="flex flex-wrap gap-2">
                   {product.features.map((feature, index) => (
-                    <Badge key={index} variant="secondary">
+                    <CustomBadge key={index} variant="feature">
                       {feature}
-                    </Badge>
+                    </CustomBadge>
                   ))}
                 </div>
 
