@@ -1,13 +1,35 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building, Phone, Mail, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Building, Phone, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ActivityDetailsProps {
   isOpen: boolean;
   onClose: () => void;
   activity: any;
+}
+
+interface Contact {
+  name: string;
+  role: string;
+  zohoId: string;
+  hospital: string;
+}
+
+interface AIInsights {
+  signalScore: number;
+  reasons: string[];
+  suggestedTopics: string[];
+  lastInteraction: string;
+}
+
+interface ActivityDetails {
+  title: string;
+  details: {
+    contact: Contact;
+    aiInsights: AIInsights;
+  };
 }
 
 export function ActivityDetails({ isOpen, onClose, activity }: ActivityDetailsProps) {
@@ -70,7 +92,7 @@ export function ActivityDetails({ isOpen, onClose, activity }: ActivityDetailsPr
                 <div>
                   <h4 className="text-sm font-medium mb-2">Why this score?</h4>
                   <ul className="space-y-2">
-                    {aiInsights.reasons.map((reason, index) => (
+                    {aiInsights.reasons.map((reason: string, index: number) => (
                       <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
                         <span className="text-primary">•</span>
                         {reason}
@@ -82,7 +104,7 @@ export function ActivityDetails({ isOpen, onClose, activity }: ActivityDetailsPr
                 <div>
                   <h4 className="text-sm font-medium mb-2">Suggested Topics</h4>
                   <ul className="space-y-2">
-                    {aiInsights.suggestedTopics.map((topic, index) => (
+                    {aiInsights.suggestedTopics.map((topic: string, index: number) => (
                       <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
                         <span className="text-primary">•</span>
                         {topic}

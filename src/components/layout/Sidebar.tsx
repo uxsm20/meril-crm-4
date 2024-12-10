@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { NAVIGATION_ITEMS } from "@/lib/constants";
 import { ScrollArea } from "@/components/ui/scroll-area";
