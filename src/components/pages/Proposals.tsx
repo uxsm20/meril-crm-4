@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus, Building2, IndianRupee } from "lucide-react";
 import { ProposalBuilder } from "./ProposalBuilder";
+import { ProposalTemplateSelector } from "@/components/proposals/ProposalTemplateSelector";
 
 const PROPOSALS = [
   {
@@ -50,25 +51,63 @@ const STATUS_STYLES = {
 } as const;
 
 export function Proposals() {
+  const [isTemplateSelectorOpen, setIsTemplateSelectorOpen] = useState(false);
   const [showBuilder, setShowBuilder] = useState(false);
+  const [selectedProposal, setSelectedProposal] = useState<typeof PROPOSALS[0] | null>(null);
+
+  const handleCreateNewProposal = () => {
+    setIsTemplateSelectorOpen(true);
+  };
+
+  const handleCreateBlankProposal = () => {
+    setIsTemplateSelectorOpen(false);
+    setShowBuilder(true);
+  };
+
+  const handleTemplateSelect = (template: any) => {
+    setIsTemplateSelectorOpen(false);
+    setShowBuilder(true);
+  };
+
+  const handleProposalClick = (proposal: typeof PROPOSALS[0]) => {
+    setSelectedProposal(proposal);
+    setShowBuilder(true);
+  };
 
   if (showBuilder) {
-    return <ProposalBuilder />;
+    return (
+      <ProposalBuilder 
+        preselectedProposal={selectedProposal}
+        onBack={() => {
+          setShowBuilder(false);
+          setSelectedProposal(null);
+        }}
+      />
+    );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold tracking-tight">Proposals</h2>
+        <Button onClick={handleCreateNewProposal}>
+          Create New Proposal
+        </Button>
+      </div>
+
+      <ProposalTemplateSelector 
+        isOpen={isTemplateSelectorOpen}
+        onClose={() => setIsTemplateSelectorOpen(false)}
+        onSelectTemplate={handleTemplateSelect}
+        onCreateNew={handleCreateBlankProposal}
+      />
+      
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Proposals</h2>
           <p className="text-muted-foreground">
             Manage your sales proposals and quotations
           </p>
         </div>
-        <Button className="gap-2" onClick={() => setShowBuilder(true)}>
-          <Plus className="h-4 w-4" />
-          New Proposal
-        </Button>
       </div>
 
       <div className="flex items-center gap-4">
@@ -94,7 +133,11 @@ export function Proposals() {
           </TableHeader>
           <TableBody>
             {PROPOSALS.map((proposal) => (
-              <TableRow key={proposal.id}>
+              <TableRow 
+                key={proposal.id}
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => handleProposalClick(proposal)}
+              >
                 <TableCell>
                   <div className="space-y-1">
                     <p className="font-medium">{proposal.title}</p>
