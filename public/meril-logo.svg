@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M20 8h80v24H20z" fill="none"/>
+  <text x="20" y="28" fill="white" font-family="Arial" font-size="24" font-weight="bold">Meril</text>
+  <text x="85" y="20" fill="#4F46E5" font-family="Arial" font-size="10">More to</text>
+  <text x="85" y="32" fill="#4F46E5" font-family="Arial" font-size="10">Life</text>
+</svg>
