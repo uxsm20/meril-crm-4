@@ -18,26 +18,30 @@ import { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableC
 import { AddProductDialog } from "../proposals/AddProductDialog";
 
 interface ProposalBuilderProps {
-  preselectedCompany?: any;
   preselectedProduct?: any;
-  preselectedProposal?: any;
   onBack?: () => void;
 }
 
-export function ProposalBuilder({ preselectedCompany, preselectedProduct, preselectedProposal, onBack }: ProposalBuilderProps) {
+export function ProposalBuilder({ preselectedProduct, onBack }: ProposalBuilderProps) {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showAddProduct, setShowAddProduct] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    title: preselectedProposal?.title || "",
-    hospital: preselectedProposal?.hospital || "",
-    contact: preselectedProposal?.contact || "",
-    products: preselectedProposal?.products || [],
-    requirements: preselectedProposal?.requirements || ""
+  const [isEditing, setIsEditing] = useState(true);
+  const [proposal, setProposal] = useState({
+    title: "",
+    hospital: "",
+    contact: "",
+    products: preselectedProduct ? [{
+      id: preselectedProduct.id,
+      name: preselectedProduct.name,
+      subcategory: preselectedProduct.category,
+      quantity: 1,
+      price: preselectedProduct.price
+    }] : [],
+    requirements: ""
   });
 
-  const title = isEditing ? formData.title : (preselectedProposal?.title || "New Proposal");
-  const status = preselectedProposal?.status || "Draft";
+  const title = isEditing ? proposal.title : (proposal.title || "New Proposal");
+  const status = "Draft";
 
   const handleSave = () => {
     // TODO: Implement save logic
@@ -80,17 +84,17 @@ export function ProposalBuilder({ preselectedCompany, preselectedProduct, presel
       <ProposalVersionHistory
         isOpen={showVersionHistory}
         onClose={() => setShowVersionHistory(false)}
-        proposalId={preselectedProposal?.id || "new"}
+        proposalId={"new"}
       />
 
       <AddProductDialog
         isOpen={showAddProduct}
         onClose={() => setShowAddProduct(false)}
         onAddProduct={(product, quantity) => {
-          setFormData({
-            ...formData,
+          setProposal({
+            ...proposal,
             products: [
-              ...formData.products,
+              ...proposal.products,
               {
                 id: product.id,
                 subcategory: product.name,
@@ -139,12 +143,12 @@ export function ProposalBuilder({ preselectedCompany, preselectedProduct, presel
               <p className="text-sm font-medium">Title</p>
               {isEditing ? (
                 <Input
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  value={proposal.title}
+                  onChange={(e) => setProposal({ ...proposal, title: e.target.value })}
                   placeholder="Enter proposal title"
                 />
               ) : (
-                <p className="text-muted-foreground">{formData.title || "-"}</p>
+                <p className="text-muted-foreground">{proposal.title || "-"}</p>
               )}
             </div>
             <div className="space-y-1">
@@ -157,24 +161,24 @@ export function ProposalBuilder({ preselectedCompany, preselectedProduct, presel
               <p className="text-sm font-medium">Hospital</p>
               {isEditing ? (
                 <Input
-                  value={formData.hospital}
-                  onChange={(e) => setFormData({ ...formData, hospital: e.target.value })}
+                  value={proposal.hospital}
+                  onChange={(e) => setProposal({ ...proposal, hospital: e.target.value })}
                   placeholder="Enter hospital name"
                 />
               ) : (
-                <p className="text-muted-foreground">{formData.hospital || "-"}</p>
+                <p className="text-muted-foreground">{proposal.hospital || "-"}</p>
               )}
             </div>
             <div className="space-y-1">
               <p className="text-sm font-medium">Contact Person</p>
               {isEditing ? (
                 <Input
-                  value={formData.contact}
-                  onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                  value={proposal.contact}
+                  onChange={(e) => setProposal({ ...proposal, contact: e.target.value })}
                   placeholder="Enter contact person"
                 />
               ) : (
-                <p className="text-muted-foreground">{formData.contact || "-"}</p>
+                <p className="text-muted-foreground">{proposal.contact || "-"}</p>
               )}
             </div>
           </div>
@@ -200,18 +204,18 @@ export function ProposalBuilder({ preselectedCompany, preselectedProduct, presel
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {formData.products?.map((product: any, index: number) => (
+                {proposal.products?.map((product: any, index: number) => (
                   <TableRow key={index}>
-                    <TableCell>{product.subcategory}</TableCell>
+                    <TableCell>{product.name}</TableCell>
                     <TableCell>
                       {isEditing ? (
                         <Input
                           type="number"
                           value={product.quantity}
                           onChange={(e) => {
-                            const newProducts = [...formData.products];
+                            const newProducts = [...proposal.products];
                             newProducts[index] = { ...product, quantity: parseInt(e.target.value) };
-                            setFormData({ ...formData, products: newProducts });
+                            setProposal({ ...proposal, products: newProducts });
                           }}
                           className="w-20"
                         />
@@ -227,8 +231,8 @@ export function ProposalBuilder({ preselectedCompany, preselectedProduct, presel
                           size="sm"
                           className="h-8 w-8 p-0"
                           onClick={() => {
-                            const newProducts = formData.products.filter((_, i) => i !== index);
-                            setFormData({ ...formData, products: newProducts });
+                            const newProducts = proposal.products.filter((_, i) => i !== index);
+                            setProposal({ ...proposal, products: newProducts });
                           }}
                         >
                           ×
@@ -237,7 +241,7 @@ export function ProposalBuilder({ preselectedCompany, preselectedProduct, presel
                     )}
                   </TableRow>
                 ))}
-                {(!formData.products || formData.products.length === 0) && (
+                {(!proposal.products || proposal.products.length === 0) && (
                   <TableRow>
                     <TableCell colSpan={isEditing ? 4 : 3} className="text-center text-muted-foreground">
                       No products added
@@ -245,12 +249,12 @@ export function ProposalBuilder({ preselectedCompany, preselectedProduct, presel
                   </TableRow>
                 )}
               </TableBody>
-              {formData.products && formData.products.length > 0 && (
+              {proposal.products && proposal.products.length > 0 && (
                 <TableFooter>
                   <TableRow>
                     <TableCell colSpan={isEditing ? 3 : 2}>Total</TableCell>
                     <TableCell className="text-right">
-                      ₹{formData.products
+                      ₹{proposal.products
                         .reduce((total: number, p: any) => total + (p.price * p.quantity), 0)
                         .toLocaleString()}
                     </TableCell>
@@ -266,14 +270,14 @@ export function ProposalBuilder({ preselectedCompany, preselectedProduct, presel
           <div className="rounded-lg border p-4">
             {isEditing ? (
               <Textarea
-                value={formData.requirements}
-                onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
+                value={proposal.requirements}
+                onChange={(e) => setProposal({ ...proposal, requirements: e.target.value })}
                 placeholder="Enter requirements"
                 className="min-h-[100px]"
               />
             ) : (
               <p className="text-muted-foreground whitespace-pre-wrap">
-                {formData.requirements || "No requirements specified"}
+                {proposal.requirements || "No requirements specified"}
               </p>
             )}
           </div>
