@@ -23,6 +23,23 @@ const PROPOSALS = [
     amount: 4500000,
     status: "Pending",
     lastUpdated: "2024-01-15",
+    description: "Comprehensive cardiovascular equipment package including monitors, ECG machines, and specialized surgical tools.",
+    products: [
+      {
+        id: "1",
+        name: "Cardiovascular Monitor",
+        subcategory: "Monitoring",
+        quantity: 2,
+        price: 1500000
+      },
+      {
+        id: "2",
+        name: "ECG Machine",
+        subcategory: "Diagnostics",
+        quantity: 3,
+        price: 500000
+      }
+    ]
   },
   {
     id: "PROP-002",
@@ -32,6 +49,23 @@ const PROPOSALS = [
     amount: 2800000,
     status: "Approved",
     lastUpdated: "2024-01-12",
+    description: "Complete set of orthopedic surgical instruments and implants for the orthopedic department.",
+    products: [
+      {
+        id: "3",
+        name: "Surgical Tool Set",
+        subcategory: "Surgery",
+        quantity: 1,
+        price: 1800000
+      },
+      {
+        id: "4",
+        name: "Implant Kit",
+        subcategory: "Orthopedics",
+        quantity: 2,
+        price: 500000
+      }
+    ]
   },
   {
     id: "PROP-003",
@@ -41,6 +75,23 @@ const PROPOSALS = [
     amount: 3200000,
     status: "Draft",
     lastUpdated: "2024-01-10",
+    description: "Modern diagnostic equipment suite including imaging systems and laboratory equipment.",
+    products: [
+      {
+        id: "5",
+        name: "X-Ray System",
+        subcategory: "Imaging",
+        quantity: 1,
+        price: 2000000
+      },
+      {
+        id: "6",
+        name: "Lab Analyzer",
+        subcategory: "Laboratory",
+        quantity: 2,
+        price: 600000
+      }
+    ]
   },
 ] as const;
 
@@ -53,6 +104,7 @@ const STATUS_STYLES = {
 export function Proposals() {
   const [isTemplateSelectorOpen, setIsTemplateSelectorOpen] = useState(false);
   const [showBuilder, setShowBuilder] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [selectedProposal, setSelectedProposal] = useState<typeof PROPOSALS[0] | null>(null);
 
   const handleCreateNewProposal = () => {
@@ -61,25 +113,29 @@ export function Proposals() {
 
   const handleCreateBlankProposal = () => {
     setIsTemplateSelectorOpen(false);
+    setSelectedTemplate(null);
     setShowBuilder(true);
   };
 
   const handleTemplateSelect = (template: any) => {
     setIsTemplateSelectorOpen(false);
+    setSelectedTemplate(template);
     setShowBuilder(true);
   };
 
-  const handleProposalClick = (proposal: typeof PROPOSALS[0]) => {
+  const handleRowClick = (proposal: typeof PROPOSALS[0]) => {
     setSelectedProposal(proposal);
     setShowBuilder(true);
   };
 
   if (showBuilder) {
     return (
-      <ProposalBuilder 
+      <ProposalBuilder
+        preselectedTemplate={selectedTemplate}
         preselectedProposal={selectedProposal}
         onBack={() => {
           setShowBuilder(false);
+          setSelectedTemplate(null);
           setSelectedProposal(null);
         }}
       />
@@ -136,7 +192,7 @@ export function Proposals() {
               <TableRow 
                 key={proposal.id}
                 className="cursor-pointer hover:bg-muted/50"
-                onClick={() => handleProposalClick(proposal)}
+                onClick={() => handleRowClick(proposal)}
               >
                 <TableCell>
                   <div className="space-y-1">

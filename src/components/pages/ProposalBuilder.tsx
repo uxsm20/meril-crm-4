@@ -18,27 +18,40 @@ import { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableC
 import { AddProductDialog } from "../proposals/AddProductDialog";
 
 interface ProposalBuilderProps {
-  preselectedProduct?: any;
-  preselectedCompany?: any;
-  onBack?: () => void;
+  preselectedTemplate?: any;
+  preselectedProposal?: {
+    id: string;
+    title: string;
+    hospital: string;
+    contact: string;
+    amount: number;
+    status: string;
+    lastUpdated: string;
+    description: string;
+    products: Array<{
+      id: string;
+      name: string;
+      subcategory: string;
+      quantity: number;
+      price: number;
+    }>;
+  };
+  onBack: () => void;
 }
 
-export function ProposalBuilder({ preselectedProduct, preselectedCompany, onBack }: ProposalBuilderProps) {
+export function ProposalBuilder({ preselectedTemplate, preselectedProposal, onBack }: ProposalBuilderProps) {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [proposal, setProposal] = useState({
-    title: "",
-    hospital: preselectedCompany?.name || "",
-    contact: preselectedCompany?.contacts?.[0]?.name || "",
-    products: preselectedProduct ? [{
-      id: preselectedProduct.id,
-      name: preselectedProduct.name,
-      subcategory: preselectedProduct.category,
-      quantity: 1,
-      price: preselectedProduct.price
-    }] : [],
-    requirements: ""
+    title: preselectedProposal?.title || preselectedTemplate?.title || "",
+    description: preselectedProposal?.description || preselectedTemplate?.description || "",
+    hospital: preselectedProposal?.hospital || "",
+    contact: preselectedProposal?.contact || "",
+    amount: preselectedProposal?.amount || 0,
+    products: preselectedProposal?.products || [],
+    tags: preselectedTemplate?.tags || [],
+    category: preselectedTemplate?.category || ""
   });
 
   const title = isEditing ? proposal.title : (proposal.title || "New Proposal");
@@ -47,6 +60,10 @@ export function ProposalBuilder({ preselectedProduct, preselectedCompany, onBack
   const handleSave = () => {
     // TODO: Implement save logic
     setIsEditing(false);
+  };
+
+  const calculateTotalAmount = () => {
+    return proposal.products.reduce((total, product) => total + (product.price * product.quantity), 0);
   };
 
   return (
@@ -153,10 +170,16 @@ export function ProposalBuilder({ preselectedProduct, preselectedCompany, onBack
               )}
             </div>
             <div className="space-y-1">
-              <p className="text-sm font-medium">Status</p>
-              <Badge variant={status === "Draft" ? "secondary" : status === "Pending" ? "default" : "success"}>
-                {status}
-              </Badge>
+              <p className="text-sm font-medium">Category</p>
+              {isEditing ? (
+                <Input
+                  value={proposal.category}
+                  onChange={(e) => setProposal({ ...proposal, category: e.target.value })}
+                  placeholder="Enter category"
+                />
+              ) : (
+                <p className="text-muted-foreground">{proposal.category || "-"}</p>
+              )}
             </div>
             <div className="space-y-1">
               <p className="text-sm font-medium">Hospital</p>
@@ -181,6 +204,29 @@ export function ProposalBuilder({ preselectedProduct, preselectedCompany, onBack
               ) : (
                 <p className="text-muted-foreground">{proposal.contact || "-"}</p>
               )}
+            </div>
+            <div className="col-span-2 space-y-1">
+              <p className="text-sm font-medium">Description</p>
+              {isEditing ? (
+                <Textarea
+                  value={proposal.description}
+                  onChange={(e) => setProposal({ ...proposal, description: e.target.value })}
+                  placeholder="Enter proposal description"
+                  className="min-h-[100px]"
+                />
+              ) : (
+                <p className="text-muted-foreground">{proposal.description || "-"}</p>
+              )}
+            </div>
+            <div className="col-span-2">
+              <p className="text-sm font-medium mb-2">Tags</p>
+              <div className="flex flex-wrap gap-2">
+                {proposal.tags?.map((tag, index) => (
+                  <Badge key={index} variant="secondary">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -281,6 +327,40 @@ export function ProposalBuilder({ preselectedProduct, preselectedCompany, onBack
                 {proposal.requirements || "No requirements specified"}
               </p>
             )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6 mb-6">
+          <div>
+            <p className="text-sm font-medium mb-2">Products</p>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Subcategory</TableHead>
+                  <TableHead>Quantity</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Total</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {proposal.products.map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>{product.subcategory}</TableCell>
+                    <TableCell>{product.quantity}</TableCell>
+                    <TableCell>₹{product.price.toLocaleString()}</TableCell>
+                    <TableCell>₹{(product.price * product.quantity).toLocaleString()}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={4}>Total Amount</TableCell>
+                  <TableCell>₹{calculateTotalAmount().toLocaleString()}</TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
           </div>
         </div>
       </div>

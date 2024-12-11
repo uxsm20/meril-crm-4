@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CustomBadge } from "@/components/ui/custom-badge";
 import { Search, Calendar, Users, ArrowRight } from "lucide-react";
 
 interface Template {
@@ -29,7 +30,7 @@ const MOCK_TEMPLATES: Template[] = [
   {
     id: "2",
     title: "Software Implementation – Private Clinics",
-    description: "Comprehensive software deployment proposal including training and support services.",
+    description: "Complete software deployment package with comprehensive staff training modules, 24/7 technical support for private healthcare facilities.",
     category: "Software",
     lastUpdated: "2023-11-28",
     successRate: 92,
@@ -97,6 +98,8 @@ export function ProposalTemplateSelector({ isOpen, onClose, onSelectTemplate, on
                 <Button
                   key={category}
                   variant={selectedCategory === category ? "default" : "outline"}
+                  size="sm"
+                  className="hover:bg-muted/50"
                   onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
                 >
                   {category}
@@ -108,12 +111,12 @@ export function ProposalTemplateSelector({ isOpen, onClose, onSelectTemplate, on
           {/* Template grid */}
           <div className="grid grid-cols-2 gap-4">
             {filteredTemplates.map(template => (
-              <Card key={template.id} className="relative group">
+              <Card key={template.id} className="relative group border-muted bg-card hover:shadow-md transition-all duration-200">
                 <CardHeader>
                   <CardTitle className="text-lg">{template.title}</CardTitle>
                   <div className="flex gap-2 flex-wrap">
                     {template.tags.map(tag => (
-                      <Badge key={tag} variant="secondary">{tag}</Badge>
+                      <CustomBadge key={tag} variant="category">{tag}</CustomBadge>
                     ))}
                   </div>
                 </CardHeader>
@@ -127,15 +130,29 @@ export function ProposalTemplateSelector({ isOpen, onClose, onSelectTemplate, on
                     {template.successRate && (
                       <div className="flex items-center gap-1">
                         <Users className="h-4 w-4" />
-                        <span>{template.successRate}% success rate</span>
+                        <span>
+                          <CustomBadge variant="info">{template.successRate}% success rate</CustomBadge>
+                        </span>
                       </div>
                     )}
                   </div>
                 </CardContent>
                 <CardFooter>
                   <Button 
-                    className="w-full"
-                    onClick={() => onSelectTemplate(template)}
+                    className="w-full hover:border-primary/30 hover:bg-primary/5"
+                    variant="outline"
+                    onClick={() => {
+                      onSelectTemplate({
+                        id: template.id,
+                        title: template.title,
+                        description: template.description,
+                        category: template.category,
+                        tags: template.tags,
+                        lastUpdated: template.lastUpdated,
+                        successRate: template.successRate
+                      });
+                      onClose();
+                    }}
                   >
                     Use This Template
                     <ArrowRight className="ml-2 h-4 w-4" />
