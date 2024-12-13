@@ -5,7 +5,7 @@ import { PhoneCall, CalendarCheck, FileText, CheckCircle } from "lucide-react";
 
 export function Dashboard() {
   return (
-    <div className="max-w-6xl mx-auto space-y-12">
+    <div className="mx-auto space-y-12">
       {/* Welcome Section */}
       <section className="space-y-3">
         <h2 className="text-3xl font-bold tracking-tight">Welcome back, Priya</h2>

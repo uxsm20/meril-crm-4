@@ -9,9 +9,9 @@ export const NAVIGATION_ITEMS = [
   },
   {
     icon: Building2,
-    label: "Companies",
-    title: "Companies",
-    href: "/companies"
+    label: "Customers",
+    title: "Customers",
+    href: "/customers"
   },
   {
     icon: Package,
@@ -20,21 +20,9 @@ export const NAVIGATION_ITEMS = [
     href: "/products"
   },
   {
-    icon: Users,
-    label: "Contacts",
-    title: "Contacts",
-    href: "/contacts"
-  },
-  {
-    icon: FileText,
-    label: "Proposals",
-    title: "Proposals",
-    href: "/proposals"
-  },
-  {
     icon: PieChart,
     label: "Sales Pipeline",
     title: "Sales Pipeline",
-    href: "/pipeline"
+    href: "/sales-pipeline"
   }
 ];

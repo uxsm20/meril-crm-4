@@ -2,7 +2,19 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, MoreHorizontal } from "lucide-react";
+import { Plus, MoreHorizontal, ChevronRight, Pencil, FileText, ArrowRight, Trash2 } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Deal {
   id: string;
@@ -125,7 +137,14 @@ export function SalesPipeline() {
     const sourceStageId = e.dataTransfer.getData("sourceStageId");
 
     if (sourceStageId === targetStageId) return;
+    moveDealToStage(dealId, sourceStageId, targetStageId);
+  };
 
+  const getTotalValue = (deals: Deal[]) => {
+    return deals.reduce((sum, deal) => sum + deal.amount, 0);
+  };
+
+  const moveDealToStage = (dealId: string, sourceStageId: string, targetStageId: string) => {
     setStages(prevStages => {
       const newStages = [...prevStages];
       
@@ -144,13 +163,33 @@ export function SalesPipeline() {
     });
   };
 
-  const getTotalValue = (deals: Deal[]) => {
-    return deals.reduce((sum, deal) => sum + deal.amount, 0);
+  const handleEditDeal = (deal: Deal) => {
+    // TODO: Implement edit deal functionality
+    console.log("Edit deal:", deal);
+  };
+
+  const handleCreateProposal = (deal: Deal) => {
+    // TODO: Implement create proposal functionality
+    console.log("Create proposal for deal:", deal);
+  };
+
+  const handleDeleteDeal = (dealId: string, stageId: string) => {
+    setStages(prevStages => {
+      return prevStages.map(stage => {
+        if (stage.id === stageId) {
+          return {
+            ...stage,
+            deals: stage.deals.filter(d => d.id !== dealId)
+          };
+        }
+        return stage;
+      });
+    });
   };
 
   return (
-    <div className="flex-1 p-4 md:p-8 pt-6 space-y-4">
-      <div className="flex justify-between items-center mb-6">
+    <div className="flex flex-col h-[calc(100vh-6rem)]">
+      <div className="flex justify-between items-center p-4 md:p-8 pb-0">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Sales Pipeline</h1>
           <p className="text-muted-foreground">
@@ -163,58 +202,110 @@ export function SalesPipeline() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-5 gap-4 overflow-x-auto pb-4">
-        {stages.map(stage => (
-          <div
-            key={stage.id}
-            className="min-w-[300px]"
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, stage.id)}
-          >
-            <div className="flex justify-between items-center mb-3">
-              <div>
-                <h3 className="font-semibold">{stage.name}</h3>
-                <p className="text-sm text-muted-foreground">
-                  ₹{getTotalValue(stage.deals).toLocaleString()} • {stage.deals.length} deals
-                </p>
-              </div>
-            </div>
+      <div className="flex-1 overflow-hidden p-4 md:p-8">
+        <ScrollArea className="h-full rounded-lg border bg-card">
+          <div className="flex gap-4 p-4">
+            {stages.map(stage => (
+              <div
+                key={stage.id}
+                className="flex-shrink-0 w-[300px] md:w-[320px]"
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, stage.id)}
+              >
+                <div className="flex justify-between items-center mb-3 sticky top-0 bg-card p-2">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold">{stage.name}</h3>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      ₹{getTotalValue(stage.deals).toLocaleString()} • {stage.deals.length} deals
+                    </p>
+                  </div>
+                </div>
 
-            <div className="space-y-3">
-              {stage.deals.map(deal => (
-                <Card
-                  key={deal.id}
-                  className="p-3 cursor-move"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, deal.id, stage.id)}
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-medium">{deal.title}</h4>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-2">{deal.hospital}</p>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">
-                      ₹{deal.amount.toLocaleString()}
-                    </span>
-                    <Badge variant={deal.probability >= 70 ? "default" : "secondary"}>
-                      {deal.probability}%
-                    </Badge>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {deal.tags.map((tag, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </Card>
-              ))}
-            </div>
+                <div className="space-y-3">
+                  {stage.deals.map(deal => (
+                    <Card
+                      key={deal.id}
+                      className={cn(
+                        "p-3 cursor-move transition-colors duration-200",
+                        "hover:border-primary/50 active:border-primary"
+                      )}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, deal.id, stage.id)}
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="font-medium line-clamp-2">{deal.title}</h4>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 -mt-1.5 -mr-1.5">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuItem onClick={() => handleEditDeal(deal)}>
+                              <Pencil className="mr-2 h-4 w-4" />
+                              Edit Deal
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleCreateProposal(deal)}>
+                              <FileText className="mr-2 h-4 w-4" />
+                              Create Proposal
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuSub>
+                              <DropdownMenuSubTrigger>
+                                <ArrowRight className="mr-2 h-4 w-4" />
+                                Move to Stage
+                              </DropdownMenuSubTrigger>
+                              <DropdownMenuSubContent>
+                                {stages
+                                  .filter(s => s.id !== stage.id)
+                                  .map(targetStage => (
+                                    <DropdownMenuItem
+                                      key={targetStage.id}
+                                      onClick={() => moveDealToStage(deal.id, stage.id, targetStage.id)}
+                                    >
+                                      {targetStage.name}
+                                    </DropdownMenuItem>
+                                  ))}
+                              </DropdownMenuSubContent>
+                            </DropdownMenuSub>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleDeleteDeal(deal.id, stage.id)}
+                              className="text-red-600 focus:text-red-600"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete Deal
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-2 line-clamp-1">{deal.hospital}</p>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium">
+                          ₹{deal.amount.toLocaleString()}
+                        </span>
+                        <Badge variant={deal.probability >= 70 ? "default" : "secondary"}>
+                          {deal.probability}%
+                        </Badge>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {deal.tags.map(tag => (
+                          <Badge key={tag} variant="outline" className="text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     </div>
   );

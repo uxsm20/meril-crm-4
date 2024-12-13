@@ -1,35 +1,27 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Header } from "@/components/layout/Header";
-import { RightPanel } from "@/components/layout/RightPanel";
-import { Dashboard } from "@/components/pages/Dashboard";
-import { Companies } from "@/components/pages/Companies";
-import { Products } from "@/components/pages/Products";
-import { Contacts } from "@/components/pages/Contacts";
-import { Proposals } from "@/components/pages/Proposals";
-import { SalesPipeline } from "@/components/pages/SalesPipeline";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Header } from "./components/layout/Header";
+import { Dashboard } from "./components/pages/Dashboard";
+import { SalesPipeline } from "./components/pages/SalesPipeline";
+import { Products } from "./components/pages/Products";
+import { Customers } from "./components/pages/Customers";
+import { CustomerDetail } from "./components/pages/CustomerDetail";
 
-function App() {
+export default function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-background text-foreground">
-        <Header />
-        <RightPanel />
-        <main className="flex-1 xl:pr-80 pt-20">
-          <div className="container px-6 py-8">
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/companies" element={<Companies />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/contacts" element={<Contacts />} />
-              <Route path="/proposals" element={<Proposals />} />
-              <Route path="/pipeline" element={<SalesPipeline />} />
-            </Routes>
-          </div>
-        </main>
-      </div>
-    </Router>
+    <div className="min-h-screen bg-white">
+      <Header />
+      <main className="pt-20">
+        <div className="max-w-8xl mx-auto px-6 py-8">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/customers/:id" element={<CustomerDetail />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/sales-pipeline" element={<SalesPipeline />} />
+          </Routes>
+        </div>
+      </main>
+    </div>
   );
 }
-
-export default App;

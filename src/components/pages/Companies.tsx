@@ -16,6 +16,7 @@ import { COMPANIES } from "@/lib/constants";
 import { ProposalBuilder } from "./ProposalBuilder";
 import { CompanyDetails } from "@/components/companies/CompanyDetails";
 import { AddEditCompanyDialog } from "@/components/companies/AddEditCompanyDialog";
+import { DealDetailsDialog } from "@/components/companies/DealDetailsDialog";
 
 export function Companies() {
   const [showBuilder, setShowBuilder] = useState(false);
@@ -24,6 +25,7 @@ export function Companies() {
   const [showAddEdit, setShowAddEdit] = useState(false);
   const [editingCompany, setEditingCompany] = useState<any>(null);
   const [companies, setCompanies] = useState(COMPANIES);
+  const [selectedDeal, setSelectedDeal] = useState<any>(null);
 
   const handleAddEditCompany = (companyData: any) => {
     if (companyData.id) {
@@ -137,9 +139,18 @@ export function Companies() {
                 </TableCell>
                 <TableCell>
                   {company.recentDeals.length > 0 ? (
-                    <CustomBadge variant="count">
-                      {company.recentDeals.length} deals
-                    </CustomBadge>
+                    <div className="flex flex-wrap gap-1">
+                      {company.recentDeals.map((deal: any) => (
+                        <CustomBadge
+                          key={deal.id}
+                          variant="count"
+                          className="cursor-pointer hover:bg-primary/90"
+                          onClick={() => setSelectedDeal(deal)}
+                        >
+                          {deal.title}
+                        </CustomBadge>
+                      ))}
+                    </div>
                   ) : (
                     <span className="text-sm text-muted-foreground">No deals</span>
                   )}
@@ -185,6 +196,12 @@ export function Companies() {
         }}
         onSave={handleAddEditCompany}
         company={editingCompany}
+      />
+
+      <DealDetailsDialog
+        isOpen={!!selectedDeal}
+        onClose={() => setSelectedDeal(null)}
+        deal={selectedDeal}
       />
     </div>
   );
