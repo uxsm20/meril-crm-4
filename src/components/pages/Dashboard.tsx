@@ -19,25 +19,25 @@ export function Dashboard() {
         <MetricsCard
           title={PERFORMANCE_METRICS.LEADS_CONTACTED}
           value="124"
-          icon={<PhoneCall className="h-4 w-4 text-muted-foreground" />}
+          icon={<PhoneCall className="h-4 w-4 text-blue-500" />}
           trend={{ value: 12, isPositive: true }}
         />
         <MetricsCard
           title={PERFORMANCE_METRICS.MEETINGS_SCHEDULED}
           value="45"
-          icon={<CalendarCheck className="h-4 w-4 text-muted-foreground" />}
+          icon={<CalendarCheck className="h-4 w-4 text-blue-500" />}
           trend={{ value: 8, isPositive: true }}
         />
         <MetricsCard
           title={PERFORMANCE_METRICS.PROPOSALS_SENT}
           value="28"
-          icon={<FileText className="h-4 w-4 text-muted-foreground" />}
+          icon={<FileText className="h-4 w-4 text-blue-500" />}
           trend={{ value: 5, isPositive: false }}
         />
         <MetricsCard
           title={PERFORMANCE_METRICS.DEALS_CLOSED}
           value="12"
-          icon={<CheckCircle className="h-4 w-4 text-muted-foreground" />}
+          icon={<CheckCircle className="h-4 w-4 text-blue-500" />}
           trend={{ value: 15, isPositive: true }}
         />
       </section>

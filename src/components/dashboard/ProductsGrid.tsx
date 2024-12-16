@@ -3,10 +3,10 @@ import { ProductCard } from "./ProductCard";
 import { PRODUCT_CATEGORIES } from "@/lib/constants";
 
 const CATEGORY_ICONS = {
-  CARDIOVASCULAR: <Heart className="h-6 w-6 text-red-400" />,
-  ORTHOPEDIC: <Stethoscope className="h-6 w-6 text-blue-400" />,
-  ENDOSURGERY: <Syringe className="h-6 w-6 text-green-400" />,
-  DIAGNOSTICS: <TestTube className="h-6 w-6 text-purple-400" />
+  CARDIOVASCULAR: <Heart className="h-6 w-6 text-blue-500" />,
+  ORTHOPEDIC: <Stethoscope className="h-6 w-6 text-blue-500" />,
+  ENDOSURGERY: <Syringe className="h-6 w-6 text-blue-500" />,
+  DIAGNOSTICS: <TestTube className="h-6 w-6 text-blue-500" />
 };
 
 export function ProductsGrid() {

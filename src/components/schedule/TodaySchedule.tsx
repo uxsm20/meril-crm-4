@@ -5,9 +5,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+} from "../ui/sheet";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 
 const SCHEDULE_ITEMS = [
   {

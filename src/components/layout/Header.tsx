@@ -1,5 +1,5 @@
 import { Bell, ChevronDown, Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,10 +7,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from "../ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Logo } from "./Logo";
-import { cn } from "@/lib/utils";
+import { cn } from "../../utils";
 import { useLocation, Link } from "react-router-dom";
 import { NAVIGATION_ITEMS } from "../navigation/constants";
 import { TodaySchedule } from "../schedule/TodaySchedule";
