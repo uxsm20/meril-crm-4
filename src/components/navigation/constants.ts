@@ -20,6 +20,12 @@ export const NAVIGATION_ITEMS = [
     href: "/products"
   },
   {
+    icon: FileText,
+    label: "Proposals",
+    title: "Proposals",
+    href: "/proposals"
+  },
+  {
     icon: PieChart,
     label: "Sales Pipeline",
     title: "Sales Pipeline",

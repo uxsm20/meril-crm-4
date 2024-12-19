@@ -11,6 +11,8 @@ import { Toaster } from "./components/ui/toaster";
 import { ProductCatalog } from "./components/pages/ProductCatalog";
 import { ProductForm } from "./components/pages/ProductForm";
 import { ProductDetails } from "./components/pages/ProductDetails";
+import { ProposalList } from "./components/pages/ProposalList";
+import { ProposalDetails } from "./components/pages/ProposalDetails";
 
 export default function App() {
   return (
@@ -25,9 +27,11 @@ export default function App() {
             <Route path="/customers/:customerId" element={<CustomerPage />} />
             <Route path="/customers/:customerId/deals/:dealId" element={<DealDetail />} />
             <Route path="/products" element={<ProductCatalog />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
             <Route path="/products/new" element={<ProductForm />} />
-            <Route path="/products/:productId" element={<ProductDetails />} />
             <Route path="/products/:productId/edit" element={<ProductForm />} />
+            <Route path="/proposals" element={<ProposalList />} />
+            <Route path="/proposals/:id" element={<ProposalDetails />} />
             <Route path="/sales-pipeline" element={<SalesPipeline />} />
           </Routes>
         </div>
