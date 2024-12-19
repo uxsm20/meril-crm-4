@@ -2,19 +2,17 @@ import { Proposal, ProposalHistory, ProposalStatus, ProposalTemplate } from "../
 import { customerService } from "./customerService";
 import { productService } from "./productService";
 
-// Mock data
-const mockProposals: Proposal[] = [
+// Base mock data without resolved references
+const mockProposalsBase = [
   {
     id: "1",
     number: "PRO-2024-001",
     customerId: "1", // Apollo Hospitals
-    customer: await customerService.getCustomer("1"),
     status: "Sent",
     items: [
       {
         id: "1",
         productId: "3", // Guardian TAVR System
-        product: await productService.getProduct("3"),
         quantity: 2,
         unitPrice: 800000,
         discount: 50000,
@@ -24,7 +22,6 @@ const mockProposals: Proposal[] = [
       {
         id: "2",
         productId: "11", // UltraVision Echo
-        product: await productService.getProduct("11"),
         quantity: 1,
         unitPrice: 3500000,
         discount: 200000,
@@ -54,13 +51,11 @@ const mockProposals: Proposal[] = [
     id: "2",
     number: "PRO-2024-002",
     customerId: "2", // Fortis Healthcare
-    customer: await customerService.getCustomer("2"),
     status: "Under Negotiation",
     items: [
       {
         id: "1",
         productId: "1", // Mozec DES
-        product: await productService.getProduct("1"),
         quantity: 50,
         unitPrice: 25000,
         discount: 2000,
@@ -70,7 +65,6 @@ const mockProposals: Proposal[] = [
       {
         id: "2",
         productId: "6", // Mozec NC Balloon
-        product: await productService.getProduct("6"),
         quantity: 30,
         unitPrice: 8000,
         discount: 500,
@@ -100,13 +94,11 @@ const mockProposals: Proposal[] = [
     id: "3",
     number: "PRO-2024-003",
     customerId: "3", // Narayana Health
-    customer: await customerService.getCustomer("3"),
     status: "Draft",
     items: [
       {
         id: "1",
         productId: "10", // MeriVision CT Scanner
-        product: await productService.getProduct("10"),
         quantity: 1,
         unitPrice: 15000000,
         discount: 1000000,
@@ -125,11 +117,11 @@ const mockProposals: Proposal[] = [
       warranty: "5 years comprehensive warranty",
       additionalTerms: "Installation, training, and 5-year service contract included"
     },
-    notes: "Proposal for new Imaging Center",
-    createdBy: "Mike Wilson",
-    createdAt: "2024-01-18T13:00:00Z",
-    updatedAt: "2024-01-18T13:00:00Z",
-    validUntil: "2024-03-18T13:00:00Z"
+    notes: "Radiology department upgrade proposal",
+    createdBy: "Michael Chen",
+    createdAt: "2024-01-17T15:00:00Z",
+    updatedAt: "2024-01-17T15:00:00Z",
+    validUntil: "2024-03-17T15:00:00Z"
   }
 ];
 
@@ -194,24 +186,49 @@ const mockTemplates: ProposalTemplate[] = [
 ];
 
 class ProposalService {
-  private proposals: Proposal[] = mockProposals;
+  private proposals = mockProposalsBase;
   private history: ProposalHistory[] = mockHistory;
   private templates: ProposalTemplate[] = mockTemplates;
 
   async getProposals(): Promise<Proposal[]> {
-    return this.proposals;
+    // Resolve customer and product references
+    const resolvedProposals = await Promise.all(
+      this.proposals.map(async (proposal) => {
+        const customer = await customerService.getCustomer(proposal.customerId);
+        const items = await Promise.all(
+          proposal.items.map(async (item) => {
+            const product = await productService.getProduct(item.productId);
+            return { ...item, product };
+          })
+        );
+        return { ...proposal, customer, items };
+      })
+    );
+    return resolvedProposals;
   }
 
   async getProposal(id: string): Promise<Proposal | null> {
-    return this.proposals.find(p => p.id === id) || null;
+    const proposal = this.proposals.find((p) => p.id === id);
+    if (!proposal) return null;
+
+    const customer = await customerService.getCustomer(proposal.customerId);
+    const items = await Promise.all(
+      proposal.items.map(async (item) => {
+        const product = await productService.getProduct(item.productId);
+        return { ...item, product };
+      })
+    );
+    return { ...proposal, customer, items };
   }
 
   async getProposalsByCustomer(customerId: string): Promise<Proposal[]> {
-    return this.proposals.filter(p => p.customerId === customerId);
+    const proposals = await this.getProposals();
+    return proposals.filter((p) => p.customerId === customerId);
   }
 
   async getProposalsByStatus(status: ProposalStatus): Promise<Proposal[]> {
-    return this.proposals.filter(p => p.status === status);
+    const proposals = await this.getProposals();
+    return proposals.filter((p) => p.status === status);
   }
 
   async createProposal(proposal: Omit<Proposal, "id" | "number">): Promise<Proposal> {
@@ -222,7 +239,7 @@ class ProposalService {
     };
 
     this.proposals.push(newProposal);
-    
+
     this.addHistory(newProposal.id, {
       action: "Created",
       description: "Proposal created",
@@ -233,7 +250,7 @@ class ProposalService {
   }
 
   async updateProposal(id: string, proposal: Partial<Proposal>): Promise<Proposal | null> {
-    const index = this.proposals.findIndex(p => p.id === id);
+    const index = this.proposals.findIndex((p) => p.id === id);
     if (index === -1) return null;
 
     this.proposals[index] = {
@@ -252,7 +269,7 @@ class ProposalService {
   }
 
   async getProposalHistory(proposalId: string): Promise<ProposalHistory[]> {
-    return this.history.filter(h => h.proposalId === proposalId);
+    return this.history.filter((h) => h.proposalId === proposalId);
   }
 
   private addHistory(proposalId: string, history: Omit<ProposalHistory, "id" | "proposalId" | "performedAt">) {
@@ -271,7 +288,7 @@ class ProposalService {
   }
 
   async getTemplate(id: string): Promise<ProposalTemplate | null> {
-    return this.templates.find(t => t.id === id) || null;
+    return this.templates.find((t) => t.id === id) || null;
   }
 }
 

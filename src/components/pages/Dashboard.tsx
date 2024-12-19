@@ -225,7 +225,7 @@ export function Dashboard() {
                     <Badge>{product.status}</Badge>
                   </div>
                   <div className="mt-4">
-                    <p className="text-2xl font-bold">{formatCurrency(product.price)}</p>
+                    <p className="text-2xl font-bold">{formatCurrency(product.pricing.basePrice)}</p>
                     <p className="text-sm text-gray-500">Base Price</p>
                   </div>
                 </CardContent>
