@@ -45,6 +45,14 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { SalesAnalytics } from "@/components/dashboard/SalesAnalytics";
+import { InventoryIntelligence } from "@/components/dashboard/InventoryIntelligence";
+import { CustomerInsights } from "@/components/dashboard/CustomerInsights";
+import { DealPipelineAnalytics } from "@/components/dashboard/DealPipelineAnalytics";
+import { RegulatoryCompliance } from "@/components/dashboard/RegulatoryCompliance";
+import { ServiceSupport } from "@/components/dashboard/ServiceSupport";
+import { MarketIntelligence } from "@/components/dashboard/MarketIntelligence";
+import { ActivityCenter } from "@/components/dashboard/ActivityCenter";
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -82,7 +90,7 @@ export function Dashboard() {
   };
 
   return (
-    <div className="mx-auto space-y-8">
+    <div className="container mx-auto p-6 space-y-6">
       {/* Welcome Section */}
       <section className="space-y-3">
         <h2 className="text-3xl font-bold tracking-tight">Welcome back, John</h2>
@@ -118,6 +126,18 @@ export function Dashboard() {
           trend={{ value: 2, isPositive: false }}
         />
       </section>
+
+      {/* Analytics Grid */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <SalesAnalytics />
+        <CustomerInsights />
+        <DealPipelineAnalytics />
+        <RegulatoryCompliance />
+        <ServiceSupport />
+        <MarketIntelligence />
+        <InventoryIntelligence />
+        <ActivityCenter />
+      </div>
 
       {/* Sales Trend Chart */}
       <Card>
