@@ -8,6 +8,9 @@ import { CustomerDetail } from "./components/pages/CustomerDetail";
 import { DealDetail } from "./components/pages/DealDetail";
 import { CustomerPage } from "./components/pages/CustomerPage";
 import { Toaster } from "./components/ui/toaster";
+import { ProductCatalog } from "./components/pages/ProductCatalog";
+import { ProductForm } from "./components/pages/ProductForm";
+import { ProductDetails } from "./components/pages/ProductDetails";
 
 export default function App() {
   return (
@@ -21,7 +24,10 @@ export default function App() {
             <Route path="/customers" element={<Customers />} />
             <Route path="/customers/:customerId" element={<CustomerPage />} />
             <Route path="/customers/:customerId/deals/:dealId" element={<DealDetail />} />
-            <Route path="/products" element={<Products />} />
+            <Route path="/products" element={<ProductCatalog />} />
+            <Route path="/products/new" element={<ProductForm />} />
+            <Route path="/products/:productId" element={<ProductDetails />} />
+            <Route path="/products/:productId/edit" element={<ProductForm />} />
             <Route path="/sales-pipeline" element={<SalesPipeline />} />
           </Routes>
         </div>
