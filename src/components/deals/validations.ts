@@ -13,6 +13,8 @@ export const dealFormSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters"),
 });
 
+export type DealFormData = z.infer<typeof dealFormSchema>;
+
 export const activityFormSchema = z.object({
   type: z.enum(["Call", "Meeting", "Email", "Task", "Note"] as const),
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -20,11 +22,15 @@ export const activityFormSchema = z.object({
     const parsedDate = new Date(date);
     return !isNaN(parsedDate.getTime());
   }, "Invalid date"),
-  notes: z.string().min(5, "Notes must be at least 5 characters"),
+  notes: z.string().min(10, "Notes must be at least 10 characters"),
 });
 
+export type ActivityFormData = z.infer<typeof activityFormSchema>;
+
 export const proposalFormSchema = z.object({
-  version: z.string().regex(/^\d+\.\d+$/, "Version must be in format X.Y (e.g., 1.0)"),
+  version: z.string().min(1, "Version is required"),
   status: z.enum(["Draft", "Sent", "Accepted", "Rejected"] as const),
-  content: z.string().min(50, "Proposal content must be at least 50 characters"),
+  content: z.string().min(10, "Content must be at least 10 characters"),
 });
+
+export type ProposalFormData = z.infer<typeof proposalFormSchema>;

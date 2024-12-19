@@ -6,6 +6,7 @@ import { Products } from "./components/pages/Products";
 import { Customers } from "./components/pages/Customers";
 import { CustomerDetail } from "./components/pages/CustomerDetail";
 import { DealDetail } from "./components/pages/DealDetail";
+import { CustomerPage } from "./components/pages/CustomerPage";
 import { Toaster } from "./components/ui/toaster";
 
 export default function App() {
@@ -18,7 +19,7 @@ export default function App() {
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/customers" element={<Customers />} />
-            <Route path="/customers/:id" element={<CustomerDetail />} />
+            <Route path="/customers/:customerId" element={<CustomerPage />} />
             <Route path="/customers/:customerId/deals/:dealId" element={<DealDetail />} />
             <Route path="/products" element={<Products />} />
             <Route path="/sales-pipeline" element={<SalesPipeline />} />
